@@ -1,6 +1,9 @@
 # NBA Win Probability Model
 
-A machine learning project that estimates the probability of the home team winning an NBA game using play-by-play data.
+This project builds a live NBA win probability model from play-by-play data. Beginning with a baseline Logistic Regression model, additional feature engineering techniques—including score-time interaction terms and a custom ELO rating system—are used to improve predictive performance.
+
+The project demonstrates the impact of domain-specific feature engineering and compares simple linear models against more complex alternatives such as Random Forests.
+
 
 ## Overview
 
@@ -29,6 +32,7 @@ Current features:
 - Game Seconds Remaining
 - Interaction Feature
     - `score_diff × game_seconds_remaining`
+- Pregame ELO Difference — Difference between home and away team ELO ratings prior to the game.
 
 Special preprocessing steps:
 
@@ -45,6 +49,7 @@ Special preprocessing steps:
 | Logistic Regression | Score Differential + Time Remaining | 76.13% |
 | Logistic Regression | + Interaction Feature | **76.62%** |
 | Random Forest | Same Features | 69.74% |
+| Logistic Regression | + Interaction + ELO | 78.3% |
 
 ---
 
@@ -54,12 +59,13 @@ Special preprocessing steps:
 - Interaction features helped the model better understand the value of late-game leads.
 - Splitting by game rather than individual rows was necessary to avoid data leakage.
 - A more complex Random Forest model performed worse than Logistic Regression, suggesting that NBA win probability changes relatively smoothly rather than through sharp decision boundaries.
+- To avoid data leakage, ELO ratings are updated chronologically after each game, and only the pregame ratings are used as model features.
 
 ---
 
 ## Future Improvements
 
-- Team ELO Ratings
+- Team ELO Ratings 
 - Possession Tracking
 - Player Availability
 - Injury Information
@@ -70,6 +76,10 @@ Special preprocessing steps:
 ## Sample Visualization
 
 ![Win Probability Curves](images/win_probability_curves.png)
+
+### Effect of Team Strength on Win Probability
+
+![ELO Curve](images/elo_probability_curve.png)
 
 ---
 
