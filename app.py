@@ -48,6 +48,47 @@ probability = model.predict_proba(
 )[0][1]
 
 st.metric(
-    label="Home Win Probability",
+    label="🏀 Home Win Probability",
     value=f"{probability:.1%}"
 )
+
+st.progress(float(probability))
+
+st.subheader("Current Game State")
+
+st.write(f"**Score Differential:** {score_diff}")
+st.write(f"**Time Remaining:** {time_remaining} seconds")
+st.write(f"**ELO Difference:** {elo_diff}")
+
+times = list(range(2880, -1, -60))
+
+score_range = range(-20, 21)
+
+curve = []
+
+import matplotlib.pyplot as plt
+
+for score in score_range:
+
+    interaction = score * time_remaining
+
+    p = model.predict_proba(
+        [[
+            score,
+            time_remaining,
+            interaction,
+            elo_diff
+        ]]
+    )[0][1]
+
+    curve.append(p)
+
+fig, ax = plt.subplots(figsize=(8, 4))
+
+ax.plot(score_range, curve, linewidth=3)
+
+ax.set_xlabel("Score Differential")
+ax.set_ylabel("Home Win Probability")
+ax.set_title("Win Probability vs Score Differential")
+
+st.pyplot(fig)
